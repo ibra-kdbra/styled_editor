@@ -4,5 +4,4 @@ node_modules
 .npmrc
 .turbo
 
-**/dist/**
-.vercel
+demo/dist/**
