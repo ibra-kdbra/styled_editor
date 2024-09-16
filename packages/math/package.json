@@ -2,7 +2,7 @@
 	"name": "@ibra-kdbra/editor-math",
 	"description": "math extension",
 	"version": "0.0.0",
-	"homepage": "https://github.com/brianhung/editor/blob/main/packages/math",
+	"homepage": "https://github.com/ibra-kdbra/styled_editor/blob/main/packages/math",
 	"keywords": [
 		"prosemirror",
 		"rich text editor"
@@ -27,7 +27,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/brianhung/editor",
+		"url": "https://github.com/ibra-kdbra/styled_editor",
 		"directory": "packages/core"
 	},
 	"scripts": {
