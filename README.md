@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Headless Editor
 
-## Getting Started
+<div align="center">
+ <a href="">
+  <img width="632px" src="./demo.png" alt="image of editor demo" title="click to navigate to demo">
+ </a>
+</div>
 
-First, run the development server:
+This is a rich text editor built upon the [ProseMirror](https://prosemirror.net/) framework.
+It is based off [tiptap](https://tiptap.dev/) and [rich-markdown-editor](https://github.com/outline/rich-markdown-editor).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Usage
+
+To use with plain JavaScript, pass in the DOM element where you'd want to mount as `place` and an array of extensions to use.
+
+```js
+import { Editor } from '@ibra-kdbra/editor';
+import { Text } from '@ibra-kdbra/editor-text';
+import { Paragraph } from '@ibra-kdbra/editor-paragraph';
+import { Doc } from '@ibra-kdbra/editor-doc';
+import '@ibra-kdbra/editor/style/core.css';
+
+let place = document.querySelector('#editor');
+let editor = new Editor({
+ place,
+ extensions: [Text(), Paragraph(), Doc()],
+});
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+To use with React,
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```tsx
+import { Editor, editorPropsToViewProps } from '@ibra-kdbra/editor';
+import { Text } from '@ibra-kdbra/editor-text';
+import { Paragraph } from '@ibra-kdbra/editor-paragraph';
+import { Doc } from '@ibra-kdbra/editor-doc';
+import { ProseMirror } from '@ibra-kdbra/editor-react';
+import '@ibra-kdbra/editor/style/core.css';
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+export const EditorDemo = React.memo(() => {
+ const [mount, setMount] = React.useState<HTMLElement | null>(null);
+ const [editorState] = React.useState(
+  () =>
+   editorPropsToViewProps({
+    content: JSON.parse(localStorage.getItem('content')),
+    extensions: [Text(), Paragraph(), Doc()],
+   }).state
+ );
+ return (
+  <ProseMirror
+   mount={mount}
+   defaultState={editorState}
+   dispatchTransaction={function dispatch(this: EditorView, tr) {
+    this.updateState(this.state.apply(tr));
+    localStorage.setItem('content', JSON.stringify(this.state.doc.toJSON()));
+   }}
+  >
+   <div ref={setMount} />
+  </ProseMirror>
+ );
+});
+```
 
-## Learn More
+### Similar Libraries
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- [tiptap](https://tiptap.dev/)
+- [prosekit](https://github.com/ocavue/prosekit)
+- [remirror](https://github.com/remirror/remirror)
+- [novel](https://github.com/steven-tey/novel)
+- [rich-markdown-editor](https://github.com/outline/outline/tree/main/shared/editor)
+- [stacks-editor](https://github.com/StackExchange/Stacks-Editor)
+- [atlaskit](https://bitbucket.org/atlassian/atlassian-frontend-mirror/src/master/editor/editor-core/)
+- [milkdown](https://github.com/Milkdown/milkdown)
